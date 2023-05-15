@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Program Secret Sharing - Rekonstruksi Nilai Rahasia</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <section class="container mb-5">
+      <nav class="navbar py-3 border-bottom">
+        <a href="/index.html" class="navbar-brand app-name"
+          >Program Secret Sharing</a
+        >
+        <a
+          class="fill-transition"
+          data-bs-toggle="offcanvas"
+          href="#offcanvasExample"
+          role="button"
+          aria-controls="offcanvasExample"
+        >
+          Menu
+        </a>
+        <div
+          class="offcanvas offcanvas-end p-4"
+          tabindex="-1"
+          id="offcanvasExample"
+          aria-labelledby="offcanvasExampleLabel"
+        >
+          <div class="offcanvas-header mb-4">
+            <h5 class="offcanvas-title app-name" id="offcanvasExampleLabel">
+              Program Secret Sharing
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav gap-4">
+              <li class="nav-item d-inline">
+                <a
+                  href="/konstruksi-share.html"
+                  class="nav-link py-2 px-3 swap-transition"
+                >
+                  Konstruksi Share
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="/rekonstruksi-nilai-rahasia.html"
+                  class="nav-link py-2 px-3 swap-transition active"
+                  >Rekonstruksi Nilai Rahasia</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="title py-5">
+        <h1>Rekonstruksi Nilai Rahasia</h1>
+        <p class="mt-2">Merekontruksi beberapa share menjadi nilai rahasia</p>
+      </div>
+      <div class="content">
+        <!-- Accordion Pengantar -->
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseThree"
+                aria-expanded="false"
+                aria-controls="collapseThree"
+              >
+                Pengantar
+              </button>
+            </h2>
+            <div
+              id="collapseThree"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div>
+                  <p class="mb-0">
+                    Alice dan Bob akan melakukan pertukaran kunci menggunakan
+                    Eliptic Curve Diffie Helman.
+                  </p>
+                  <p class="mb-0">
+                    Alice dan Bob akan memiliki kunci privat dan kunci publik.
+                  </p>
+                  <p class="mb-0">Misalkan:</p>
+                  <ul>
+                    <li>Alice memiliki kunci rahasia x dan kunci publik P</li>
+                    <li>Bob memiliki kunci rahasia y dan kunci publik Q</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="fs-1 fw-600">Hitung Kunci Publik</h4>
+                  <p class="mb-0">
+                    Langkah-langkah yang dilakukan untuk menghitung kunci publik
+                    sebagai berikut.
+                  </p>
+                  <ol>
+                    <li>Pilih persamaan kurva eliptik</li>
+                    <li>
+                      Pilih titik basis (B) dari kurva eliptik yang dipilih
+                      sebelumnya
+                    </li>
+                    <li>Pilih kunci privat (x) berupa bilangan bulat</li>
+                    <li>Hitung kunci publik (P), P = x.B</li>
+                    <li>Kirim kunci publik (P), misalkan dari Alice ke Bob</li>
+                  </ol>
+                </div>
+                <div>
+                  <h4 class="fs-1 fw-600">Hitung Kunci Rahasia</h4>
+                  <p class="mb-0">
+                    Langkah-langkah yang dilakukan untuk menghitung kunci publik
+                    sebagai berikut.
+                  </p>
+                  <ol>
+                    <li>Pilih kunci rahasia (x)</li>
+                    <li>Dapatkan kunci publik dari orang lain (Q)</li>
+                    <li>Hitung kunci rahasia (K), K = x.Q</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Memilih p, s -->
+        <div class="py-5">
+          <div>
+            <h3 class="fs-2 fw-600">Pilih p, s</h3>
+            <p>
+              Untuk merekonstruksi nilai rahasia M, diperlukan minimal t buah
+              share yaitu s = {s<sub>1</sub>, s<sub>2</sub>, s<sub>3</sub>, ...,
+              s<sub>n</sub>} dengan n &#x2265; t
+            </p>
+
+            <div class="input-group py-1">
+              <span class="input-group-text">p</span>
+              <input
+                type="text"
+                aria-label="p value"
+                id="pValue"
+                class="form-control"
+                data-bs-container="body"
+                data-bs-toggle="popover"
+                data-bs-placement="top"
+                data-bs-trigger="hover focus"
+                data-bs-content="p digunakan dalam operasi polinom. Operasi pada polinom dilakukan dalam modulo p. Isi dengan bilangan prima."
+              />
+            </div>
+            <div class="input-group py-1">
+              <span class="input-group-text">s</span>
+              <textarea
+                type="text"
+                aria-label="s value"
+                id="sValue"
+                class="form-control"
+                data-bs-container="body"
+                data-bs-toggle="popover"
+                data-bs-placement="top"
+                data-bs-trigger="hover focus"
+                data-bs-content="s adalah share yang dimiliki. Misal share yang dimiliki ada sebanyak 3 buah. Share 1 adalah (2,5). Share 2 adalah (3,7). Share 3 adalah (4,8). Masukan yang perlu dimasukkan adalah (2,5);(3,7);(4,8). Tiap share dipisahkan dengan tanda titik koma (;)"
+              ></textarea>
+            </div>
+            <a href="#outputProcessM" class="btn my-btn mt-3" id="btnProcessM"
+              >Simpan</a
+            >
+          </div>
+          <div class="alert my-4 visually-hidden" id="outputProcessM">
+            <h4 class="fs-1 fw-600">Hasil</h4>
+            <p id="resultProcessM"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/ecdh.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=K2D:wght@700&display=swap');
+
+:root {
+    --myred1: #FF3F3F;
+    --myred2: #FF8484;
+    --myblack1: #0E0E0E;
+  }
+
+body {
+    font-family: 'Inter', sans-serif;
+    min-height: 1vh;
+}
+
+/* Custom Font Weight */
+.fw-300 {
+    font-weight: 300;
+}
+
+.fw-400 {
+    font-weight: 400;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.fw-600 {
+    font-weight: 600;
+}
+
+.fw-700 {
+    font-weight: 700;
+}
+
+/* Custom Font Size */
+.fs-1 {
+    font-size: 1rem !important;
+}
+
+.fs-2 {
+    font-size: 1.5rem !important;
+}
+
+.fs-3 {
+    font-size: 2rem ;
+}
+
+/* Custom Element Property */
+ol, ul {
+    padding-left: 1rem !important;
+}
+
+.offcanvas-body ul {
+    padding-left: 0 !important;
+}
+
+.input-group-text {
+    min-width: 48px;
+    margin-bottom: auto;
+}
+
+/* Button */
+.fill-transition {
+    text-decoration: none;
+    color: var(--myblack1);
+    font-weight: 700;
+
+    background:
+      linear-gradient(
+        to right,
+        var(--myblack1),
+        var(--myblack1)
+      ),
+      linear-gradient(
+        to right,
+        var(--myred1),
+        var(--myred1)
+    );
+    background-size: 100% 3px, 0 3px;
+    background-position: 100% 100%, 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 400ms;
+}
+
+.fill-transition:hover {
+    background-size: 0 3px, 100% 3px;
+}
+
+.swap-transition {
+    box-shadow: inset 0 0 0 0 var(--myred1);
+    color: var(--myblack1);
+    padding: 0 .25rem;
+    margin: 0 -.25rem;
+    transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+    font-weight: 600;
+}
+
+.swap-transition.active {
+    color: white !important;
+    box-shadow: inset 400px 0 0 0 var(--myred1);
+}
+
+.swap-transition:hover {
+    color: #fff;
+    box-shadow: inset 400px 0 0 0 var(--myred1);
+}
+
+.input-group {
+    max-width: 720px;
+}
+
+.input-group .input-group-text {
+    border: 0;
+    background-color: transparent;
+}
+
+.input-group input, .input-group textarea {
+    border-radius: 4px !important;
+}
+
+.btn.my-btn {
+    background-color: var(--myred2);
+    font-weight: 500;
+    color: white;
+}
+
+.btn.my-btn:hover {
+    background-color: var(--myred1);
+    font-weight: 500;
+    color: white;
+}
+
+/* Home page */
+.group-name {
+    font-weight: 400;
+    font-size: .8rem;
+    color: var(--myblack1);
+    list-style: none;
+}
+
+.app-name {
+    font-family: 'K2D', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--myred1);
+}
+
+.offcanvas-title.app-name {
+    font-family: 'K2D', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--myred1);
+}
+
+.navbar-brand.app-name {
+    font-family: 'K2D', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--myred1);
+}
+
+.feature-list {
+    display: flex;
+
+    border: .2px #0e0e0e solid;
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 800px;
+    width: 100%;
+
+    cursor: pointer;
+}
+
+.feature-list:hover {
+    box-sizing: border-box;
+    border-color: var(--myred1);
+    box-shadow: inset 0px 0px 0px 2px var(--myred1);
+    transition: ease;
+}
+
+/* General */
+.title h1, .title p {
+    margin-bottom: 0;
+}
+
+.title h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.title p {
+    max-width: 720px;
+}
+
+.custom-link {
+    text-decoration: underline;
+    color: var(--myblack1);
+}
+
+.custom-link:hover {
+    color: var(--myred1);
+}
+
+/* Pelelaran */
+table.my-table, th, td {
+  border: 1px solid black;
+  padding: 2px 16px;
+  text-align: center;
+}
+
+/* ECDH */
+.accordion-button {
+    background-color: var(--myred2) !important;
+    color: white !important;
+    font-weight: 500;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    /* border-color: rgba(0,0,0,.125); */
+}
+
+.accordion-button:not(.collapsed)::after,  .accordion-button.collapsed::after{
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
