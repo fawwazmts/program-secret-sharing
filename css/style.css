@@ -59,6 +59,12 @@ ol, ul {
     margin-bottom: auto;
 }
 
+.highlight {
+    background-color: var(--myred2);
+    padding: 4px;
+    border-radius: 4px;
+}
+
 /* Button */
 .fill-transition {
     text-decoration: none;

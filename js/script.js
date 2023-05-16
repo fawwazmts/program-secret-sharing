@@ -1,13 +1,30 @@
-let aGlobal = null,
-  bGlobal = null,
-  pGlobal = null;
+// Halaman Utama
+// Variabel Global
+let mGlobal, tGlobal, wGlobal, pGlobal, sGlobal;
 
-const arrToStr = (arr) => {
-  return `(${arr[0]}, ${arr[1]})`;
+// Custom function
+// Merubah "(1,2);(3,4)"" menjadi [[1,3],[2,4]]
+const getXY = (str) => {
+  let newStr = str.split(",");
+  let x = Number(newStr[0].replace(/\D/g, "")),
+    y = Number(newStr[1].replace(/\D/g, ""));
+  return [x, y];
 };
 
-// Halaman Utama
-// Membuat feature di halaman pertama dapat diklik
+const separateXY = (arr) => {
+  let x, y;
+  let arrX = [],
+    arrY = [];
+  for (let i = 0; i < arr.length; i++) {
+    x = arr[i][0];
+    arrX.push(x);
+    y = arr[i][1];
+    arrY.push(y);
+  }
+  return [arrX, arrY];
+};
+
+// Membuat feature di halaman utama dapat diklik
 const featureList = document.querySelectorAll(".feature-list");
 
 for (let i = 0; i < featureList.length; i++) {
@@ -21,8 +38,7 @@ for (let i = 0; i < featureList.length; i++) {
   );
 }
 
-// Titik Kurva
-// Membuah petunjuk pengisian muncul
+// Membuat petunjuk pengisian muncul
 const popoverTriggerList = document.querySelectorAll(
   '[data-bs-toggle="popover"]'
 );
@@ -30,264 +46,141 @@ const popoverList = [...popoverTriggerList].map(
   (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
 );
 
-// Menghitung himpunan titik persamaan kurva eliptik pada Galois Field
-const btnPointSet = document.querySelector("#btnPointSet");
-const outputPointSet = document.querySelector("#outputPointSet");
+// Konstruksi Share
+// Memilih M, w, t
+const btnSaveM = document.querySelector("#btnSaveM");
 
-if (btnPointSet) {
-  btnPointSet.addEventListener("click", () => {
-    const a = document.querySelector("#aValue").value;
-    const b = document.querySelector("#bValue").value;
-    const p = document.querySelector("#pValue").value;
-    const pointSetResult = document.querySelector("#pointSetResult");
+if (btnSaveM) {
+  btnSaveM.addEventListener("click", () => {
+    let M = Number(document.querySelector("#mValue").value),
+      t = Number(document.querySelector("#tValue").value),
+      w = Number(document.querySelector("#wValue").value);
 
-    newArr = ecSet(a, b, p).map(arrToStr);
-    pointSet = newArr.join(", ");
-    let stringResult = "";
+    let outputSaveM = document.querySelector("#outputSaveM"),
+      resultSaveM = document.querySelector("#resultSaveM");
 
-    if (a == "" || b == "" || p == "") {
-      stringResult =
-        "Pastikan semua masukan fungsi kurva eliptik diisi terlebih dahulu!";
-      outputPointSet.classList.remove("alert-success");
-      outputPointSet.classList.add("alert-danger");
+    if (M == "" || t == "" || w == "") {
+      stringResult = "Pastikan masukan M, t, dan w telah diisi semua!";
+      outputSaveM.classList.remove("alert-success");
+      outputSaveM.classList.add("alert-danger");
     } else {
-      stringResult = `Titik-titik yang menuhi persamaan kurva eliptik y<sup>2</sup> &#x2630; x<sup>3</sup> + ${a}x + ${b} (mod ${p}), yaitu:</br>
-                {${pointSet}}`;
-      outputPointSet.classList.remove("alert-danger");
-      outputPointSet.classList.add("alert-success");
+      mGlobal = M;
+      tGlobal = t;
+      wGlobal = w;
+      stringResult = `Nilai rahasia ${M} akan dibagikan kepada ${w} orang. Diperlukan minimal ${t} orang untuk merenstruksi kembali nilai rahasia ${M}.`;
+      outputSaveM.classList.remove("alert-danger");
+      outputSaveM.classList.add("alert-success");
     }
-    pointSetResult.innerHTML = stringResult;
-    outputPointSet.classList.remove("visually-hidden");
-
-    (aGlobal = a), (bGlobal = b), (pGlobal = p);
+    resultSaveM.innerHTML = stringResult;
+    outputSaveM.classList.remove("visually-hidden");
   });
 }
 
-// Menjumlahkan dua titik persamaan kurva eliptik pada Galois Field
-const btnSumPoint = document.querySelector("#btnSumPoint");
+// Memilih polinom
+const btnProcessShare = document.querySelector("#btnProcessShare");
 
-if (btnSumPoint) {
-  btnSumPoint.addEventListener("click", () => {
-    let xp = document.querySelector("#xpValue").value,
-      yp = document.querySelector("#ypValue").value,
-      xq = document.querySelector("#xqValue").value,
-      yq = document.querySelector("#yqValue").value;
+if (btnProcessShare) {
+  btnProcessShare.addEventListener("click", () => {
+    let p = Number(document.querySelector("#pValue").value),
+      s = document.querySelector("#sValue").value;
 
-    let pointSumResult = document.querySelector("#pointSumResult"),
-      outputSumPoint = document.querySelector("#outputSumPoint");
+    let outputProcessShare = document.querySelector("#outputProcessShare"),
+      resultProcessShare = document.querySelector("#resultProcessShare");
 
-    let z1 = [xp, yp],
-      z2 = [xq, yq];
-
-    let result = sum(z1, z2, aGlobal, pGlobal);
-
-    if (xp == "" || yp == "" || xq == "" || yq == "") {
-      stringResult =
-        "Pastikan semua masukan x<sub>p</sub>, y<sub>p</sub>, x<sub>q</sub>, y<sub>q</sub> diisi terlebih dahulu!";
-      outputSumPoint.classList.remove("alert-success");
-      outputSumPoint.classList.add("alert-danger");
+    if (p == "" || s == "") {
+      stringResult = "Pastikan masukan p dan s telah diisi semua!";
+      outputProcessShare.classList.remove("alert-success");
+      outputProcessShare.classList.add("alert-danger");
     } else {
-      if (yp == "inf") {
-        yp = "∞";
+      t = tGlobal;
+      s = s.split(",").map(Number);
+      w = wGlobal;
+      M = mGlobal;
+
+      // Menulis polinom yang dipilih
+      let polinom = `f(x) = ${mGlobal} + `;
+      for (let i = 0; i < t - 1; i++) {
+        if (i < t - 2) {
+          polinom += `${s[i]} x<sup>${i + 1}</sup> + `;
+        } else {
+          polinom += `${s[i]} x<sup>${i + 1}</sup> (mod ${p})`;
+        }
       }
 
-      if (yq == "inf") {
-        yq = "∞";
+      // Menghitung share
+      let shares = [];
+      coef = [...[M], ...s];
+      for (let i = 0; i < w; i++) {
+        share = [i + 1, f(i + 1, p, coef)];
+        shares.push(share);
       }
 
-      if (result[1] == "inf") {
-        result[1] = "∞";
-      }
-
-      stringResult = `Hasil penjumlahan titik persamaan kurva eliptik y<sup>2</sup> &#x2630; x<sup>3</sup> + ${aGlobal}x + ${bGlobal} (mod ${pGlobal}), yaitu:</br>
-              (${xp},${yp}) + (${xq},${yq}) = (${result[0]},${result[1]})`;
-      outputSumPoint.classList.remove("alert-danger");
-      outputSumPoint.classList.add("alert-success");
-    }
-    pointSumResult.innerHTML = stringResult;
-    outputSumPoint.classList.remove("visually-hidden");
-  });
-}
-
-// Melelarkan titik P menjadi kP
-const btnStretchPoint = document.querySelector("#btnStretchPoint");
-
-if (btnStretchPoint) {
-  btnStretchPoint.addEventListener("click", () => {
-    let xp = document.querySelector("#xpValue").value,
-      yp = document.querySelector("#ypValue").value,
-      k = document.querySelector("#kValue").value;
-
-    let outputStretchPoint = document.querySelector("#outputStretchPoint"),
-      pointStretchResult = document.querySelector("#pointStretchResult"),
-      z = [xp, yp];
-
-    let result = stretch(z, k, aGlobal, pGlobal);
-
-    if (xp == "" || yp == "" || k == "") {
-      console.log(yp, result[1]);
-
-      stringResult =
-        "Pastikan semua masukan x<sub>p</sub>, y<sub>p</sub>, k diisi terlebih dahulu!";
-      outputStretchPoint.classList.remove("alert-success");
-      outputStretchPoint.classList.add("alert-danger");
-    } else {
-      if (yp == "inf") {
-        yp = "∞";
-      }
-
-      if (result[1] == "inf") {
-        result[1] = "∞";
-      }
-
-      stringResult = `Hasil pelelaran titik persamaan kurva eliptik y<sup>2</sup> &#x2630; x<sup>3</sup> + ${aGlobal}x + ${bGlobal} (mod ${pGlobal}), yaitu:</br>
-              ${k}.(${xp},${yp}) = (${result[0]},${result[1]})`;
-      outputStretchPoint.classList.remove("alert-danger");
-      outputStretchPoint.classList.add("alert-success");
-    }
-    pointStretchResult.innerHTML = stringResult;
-    outputStretchPoint.classList.remove("visually-hidden");
-  });
-}
-
-// Melelarkan titik Q menjadi 1Q, 2Q, 3Q, ..., mQ
-const btnAllStretchPoint = document.querySelector("#btnAllStretchPoint");
-
-if (btnAllStretchPoint) {
-  btnAllStretchPoint.addEventListener("click", () => {
-    let xq = document.querySelector("#xqValue").value,
-      yq = document.querySelector("#yqValue").value,
-      m = document.querySelector("#mValue").value;
-
-    let outputAllStretchPoint = document.querySelector(
-        "#outputAllStretchPoint"
-      ),
-      pointStretchResult = document.querySelector("#pointStretchResult"),
-      z = [xq, yq];
-
-    let result = null,
-      resultArr = [];
-    for (let i = 0; i < m; i++) {
-      result = stretch(z, i + 1, aGlobal, pGlobal);
-      resultArr.push(result);
-    }
-
-    let tableContent = `<tr>
-      <th scope="col">k</th>
-      <th scope="col">kQ</th>
-    </tr>`,
-      tableRow = "";
-
-    for (let i = 0; i < resultArr.length; i++) {
-      let e = resultArr[i];
-
-      if (e == "O" || (e[0] == 0 && e[1] == "inf")) {
-        tableRow = `<tr>
-        <td scope="row">${i + 1}</td>
-        <td>(0,∞)</th>
+      // Menulis shares yang diperoleh ke dalam tabel
+      let th = `<tr>
+        <th>Share i</th>
+        <th>Nilai Share (x<sub>i</sub>, y<sub>i</sub>)</th>
       </tr>`;
-      } else {
-        tableRow = `<tr>
-        <td scope="row">${i + 1}</td>
-        <td>(${e[0]},${e[1]})</th>
+
+      let td = "";
+      for (let i = 0; i < shares.length; i++) {
+        td += `<tr>
+          <td>Share ${shares[i][0]}</td>
+          <td>(${shares[i][0]}, ${shares[i][1]})</td>
+        </tr>`;
+      }
+
+      tableContent = `<table class="mt-2 mb-4">${th}${td}</table>`;
+
+      stringResult = `<p>Polinom yang dipilih adalah ${polinom}.</p><p>Diperoleh ${w} buah share yang dapat dibagikan ke ${w} orang.</p>${tableContent}`;
+      outputProcessShare.classList.remove("alert-danger");
+      outputProcessShare.classList.add("alert-success");
+    }
+    resultProcessShare.innerHTML = stringResult;
+    outputProcessShare.classList.remove("visually-hidden");
+  });
+}
+
+// Rekonstruksi Nilai Rahasia
+const btnProcessM = document.querySelector("#btnProcessM");
+
+if (btnProcessM) {
+  btnProcessM.addEventListener("click", () => {
+    let p = Number(document.querySelector("#pValue").value),
+      s = document.querySelector("#sValue").value;
+
+    let outputProcessM = document.querySelector("#outputProcessM"),
+      resultProcessM = document.querySelector("#resultProcessM");
+
+    if (p == "" || s == "") {
+      stringResult = "Pastikan masukan p dan s telah diisi semua!";
+      outputProcessM.classList.remove("alert-success");
+      outputProcessM.classList.add("alert-danger");
+    } else {
+      s = s.split(";").map(getXY);
+      s = separateXY(s);
+      let M = reconstruct_secret(s[0], s[1], p);
+
+      // Menulis shares yang diperoleh ke dalam tabel
+      let th = `<tr>
+        <th>Share i</th>
+        <th>Nilai Share (x<sub>i</sub>, y<sub>i</sub>)</th>
       </tr>`;
+
+      let td = "";
+      for (let i = 0; i < s[0].length; i++) {
+        td += `<tr>
+          <td>Share ${s[0][i]}</td>
+          <td>(${s[0][i]}, ${s[1][i]})</td>
+        </tr>`;
       }
 
-      tableContent += tableRow;
+      tableContent = `<table class="mt-2 mb-2">${th}${td}</table>`;
+
+      stringResult = `<p>Nilai p yang dimasukkan adalah ${p}. Share yang dimasukkan yaitu:</p> ${tableContent}<p>Berdasarkan share tersebut diperoleh nilai rahasia ${M}.</p>`;
+      outputProcessM.classList.remove("alert-danger");
+      outputProcessM.classList.add("alert-success");
     }
-
-    let table = `<table class="my-table">${tableContent}</table>`;
-
-    if (xq == "" || yq == "" || m == "") {
-      stringResult =
-        "<p>Pastikan semua masukan x<sub>q</sub>, y<sub>q</sub>, m diisi terlebih dahulu!</p>";
-      outputAllStretchPoint.classList.remove("alert-success");
-      outputAllStretchPoint.classList.add("alert-danger");
-    } else {
-      stringResult =
-        `<p>Hasil pelelaran titik persamaan kurva eliptik y<sup>2</sup> &#x2630; x<sup>3</sup> + ${aGlobal}x + ${bGlobal} (mod ${pGlobal}), yaitu:</p>` +
-        table;
-      outputAllStretchPoint.classList.remove("alert-danger");
-      outputAllStretchPoint.classList.add("alert-success");
-    }
-    pointAllStretchResult.innerHTML = stringResult;
-    outputAllStretchPoint.classList.remove("visually-hidden");
-  });
-}
-
-// Menghitung kunci publik P(xp,yp) = x. B(xb,yb)
-const btnPublicKey = document.querySelector("#btnPublicKey");
-
-if (btnPublicKey) {
-  btnPublicKey.addEventListener("click", () => {
-    let xb = document.querySelector("#xbValue").value,
-      yb = document.querySelector("#ybValue").value,
-      x = document.querySelector("#xValue").value;
-
-    let outputPublicKey = document.querySelector("#outputPublicKey"),
-      pointPublicKeyResult = document.querySelector("#pointPublicKeyResult"),
-      z = [xb, yb];
-
-    let result = stretch(z, x, aGlobal, pGlobal);
-
-    if (xb == "" || yb == "" || x == "") {
-      stringResult =
-        "Pastikan semua masukan x<sub>b</sub>, y<sub>b</sub>, x diisi terlebih dahulu!";
-      outputPublicKey.classList.remove("alert-success");
-      outputPublicKey.classList.add("alert-danger");
-    } else {
-      if (yb == "inf") {
-        yb = "∞";
-      }
-
-      if (result[1] == "inf") {
-        result[1] = "∞";
-      }
-      stringResult = `Hasil perhitungan kunci publik P(x<sub>p</sub>,y<sub>p</sub>) persamaan kurva eliptik y<sup>2</sup> &#x2630; x<sup>3</sup> + ${aGlobal}x + ${bGlobal} (mod ${pGlobal}), yaitu:</br>
-                P(x<sub>p</sub>,y<sub>p</sub>) = ${x}.(${xb},${yb}) = (${result[0]},${result[1]})`;
-      outputPublicKey.classList.remove("alert-danger");
-      outputPublicKey.classList.add("alert-success");
-    }
-    pointPublicKeyResult.innerHTML = stringResult;
-    outputPublicKey.classList.remove("visually-hidden");
-  });
-}
-
-// Menghitung kunci rahasia K(xk,yk) = x. Q(xq,yq)
-const btnSecretKey = document.querySelector("#btnSecretKey");
-
-if (btnSecretKey) {
-  btnSecretKey.addEventListener("click", () => {
-    let xq = document.querySelector("#xqValue").value,
-      yq = document.querySelector("#yqValue").value,
-      x = document.querySelector("#xSecValue").value;
-
-    let outputSecretKey = document.querySelector("#outputSecretKey"),
-      pointSecretKeyResult = document.querySelector("#pointSecretKeyResult"),
-      z = [xq, yq];
-
-    let result = stretch(z, x, aGlobal, pGlobal);
-
-    if (xq == "" || yq == "" || x == "") {
-      stringResult =
-        "Pastikan semua masukan x<sub>q</sub>, y<sub>q</sub>, x diisi terlebih dahulu!";
-      outputSecretKey.classList.remove("alert-success");
-      outputSecretKey.classList.add("alert-danger");
-    } else {
-      if (yq == "inf") {
-        yq = "∞";
-      }
-
-      if (result[1] == "inf") {
-        result[1] = "∞";
-      }
-
-      stringResult = `Hasil perhitungan kunci rahasia K(x<sub>x</sub>,y<sub>k</sub>) persamaan kurva eliptik y<sup>2</sup> &#x2630; x<sup>3</sup> + ${aGlobal}x + ${bGlobal} (mod ${pGlobal}), yaitu:</br>
-                K(x<sub>k</sub>,y<sub>k</sub>) = ${x}.(${xq},${yq}) = (${result[0]},${result[1]})`;
-      outputSecretKey.classList.remove("alert-danger");
-      outputSecretKey.classList.add("alert-success");
-    }
-    pointSecretKeyResult.innerHTML = stringResult;
-    outputSecretKey.classList.remove("visually-hidden");
+    resultProcessM.innerHTML = stringResult;
+    outputProcessM.classList.remove("visually-hidden");
   });
 }

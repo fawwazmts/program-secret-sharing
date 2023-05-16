@@ -8,7 +8,7 @@ const mod = (n, m) => {
 const f = (x, p, coef) => {
   let sum = 0;
   for (let i = 0; i < coef.length; i++) {
-    sum += coef[i] * x ** k;
+    sum += coef[i] * x ** i;
   }
   return mod(sum, p);
 };
@@ -28,26 +28,29 @@ const isPrime = (x) => {
 
 // Menghitung invers modulo p
 const inv = (x, p) => {
-  let result = null;
-
-  for (let i = 0; i < p; i++) {
+  for (let i = 1; i < p; i++) {
     if (mod(x * i, p) == 1) {
-      result = i;
+      return i;
     }
   }
-  return result;
 };
 
-// Mencari interpolasi lagrange
-// def Polinom_Lagrange(X,Y,P,t):
-//     x=0
-//     f=0
-//     for j in range(t):
-//         f_atas=Y[j]
-//         f_bawah=1
-//         for i in range(t):
-//             if i!=j:
-//                 f_atas=f_atas*(x-X[i])
-//                 f_bawah=f_bawah*(X[j]-X[i])
-//         f=(f+(f_atas*invers(f_bawah,P))%P)%P
-//     return f
+const reconstruct_secret = (arrX, arrY, p) => {
+  let x = 0,
+    f = 0;
+  if (arrX.length == arrY.length) {
+    t = arrX.length;
+    for (let j = 0; j < t; j++) {
+      let fTop = arrY[j],
+        fBottom = 1;
+      for (let i = 0; i < t; i++) {
+        if (i != j) {
+          fTop = fTop * (x - arrX[i]);
+          fBottom = fBottom * (arrX[j] - arrX[i]);
+        }
+      }
+      f = mod(f + mod(fTop * inv(fBottom, p), p), p);
+    }
+    return f;
+  }
+};
