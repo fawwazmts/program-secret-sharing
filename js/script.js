@@ -82,7 +82,8 @@ const btnProcessShare = document.querySelector("#btnProcessShare");
 if (btnProcessShare) {
   btnProcessShare.addEventListener("click", () => {
     let p = Number(document.querySelector("#pValue").value),
-      s = document.querySelector("#sValue").value;
+      s = document.querySelector("#sValue").value,
+      x = document.querySelector("#xValue").value;
 
     let outputProcessShare = document.querySelector("#outputProcessShare"),
       resultProcessShare = document.querySelector("#resultProcessShare");
@@ -94,6 +95,7 @@ if (btnProcessShare) {
     } else {
       t = tGlobal;
       s = s.split(",").map(Number);
+      x = x.split(",").map(Number);
       w = wGlobal;
       M = mGlobal;
 
@@ -111,7 +113,7 @@ if (btnProcessShare) {
       let shares = [];
       coef = [...[M], ...s];
       for (let i = 0; i < w; i++) {
-        share = [i + 1, f(i + 1, p, coef)];
+        share = [x[i], f(x[i], p, coef)];
         shares.push(share);
       }
 
@@ -124,7 +126,7 @@ if (btnProcessShare) {
       let td = "";
       for (let i = 0; i < shares.length; i++) {
         td += `<tr>
-          <td>Share ${shares[i][0]}</td>
+          <td>Share ${i + 1}</td>
           <td>(${shares[i][0]}, ${shares[i][1]})</td>
         </tr>`;
       }
