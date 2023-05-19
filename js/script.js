@@ -67,7 +67,7 @@ if (btnSaveM) {
       mGlobal = M;
       tGlobal = t;
       wGlobal = w;
-      stringResult = `Nilai rahasia ${M} akan dibagikan kepada ${w} orang. Diperlukan minimal ${t} orang untuk merenstruksi kembali nilai rahasia ${M}.`;
+      stringResult = `Nilai rahasia ${M} akan dibagikan kepada ${w} orang. Diperlukan minimal ${t} orang untuk merekonstruksi kembali nilai rahasia ${M}.`;
       outputSaveM.classList.remove("alert-danger");
       outputSaveM.classList.add("alert-success");
     }
